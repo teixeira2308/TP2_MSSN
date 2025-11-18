@@ -5,9 +5,11 @@
 
 package setup;
 
+import aa.BoidApp;
 import apps.TestApp;
 import physics.ControlGUIApp;
 import physics.FallingBodyApp;
+import physics.Particle;
 import physics.ParticleSystem;
 import physics.SolarSystemApp;
 import physics.testParticle;
@@ -23,7 +25,7 @@ public class Processing extends PApplet {
     private int lastUpdateTime;
 
     public static void main(String[] args) {
-        app = new FallingBodyApp();
+        app = new BoidApp();
         PApplet.main(Processing.class.getName());
     }
 

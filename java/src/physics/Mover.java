@@ -7,13 +7,12 @@ public abstract class Mover {
     protected PVector vel;
     protected PVector acc;
     protected float mass;
-    protected float radius;
+    private static double G = 6.67e-11;
 
-    protected Mover(PVector pos, PVector vel, float mass, float radius) {
+    protected Mover(PVector pos, PVector vel, float mass) {
         this.pos = pos.copy();// copy() -> cria um objeto idêntico ao que está a ser copiado que não muda mesmo que o objeto inicial mude, pelo q percebi.
         this.vel = vel.copy();
         this.mass = mass;
-        this.radius = radius;
         acc = new PVector();
     }
     public void applyForce(PVector f){
@@ -37,11 +36,14 @@ public abstract class Mover {
         return pos;
     }
 
-    public float getRadius() {
-        return radius;
-    }
-
     public PVector getVel() {
         return vel;
+    }
+
+    public PVector attraction(Mover m) {
+        PVector r = PVector.sub(pos, m.pos);        
+        float dist = r.mag();
+        float strength = (float) (G * mass * m.mass / Math.pow(dist, 2));
+        return r.normalize().mult(strength);
     }
 }

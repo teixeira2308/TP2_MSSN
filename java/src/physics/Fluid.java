@@ -10,10 +10,10 @@ public abstract class Fluid {
         this.density = density;
     }
 
-    public PVector drag(Mover m){
-        float area = PApplet.pow(m.getRadius(),2.0f)*PApplet.PI;
-        float mag = m.getVel().mag();
-        return PVector.mult(m.vel,-0.5f*density*area*mag);
+    public PVector drag(Body b){
+        float area = PApplet.pow(b.getRadius(),2.0f)*PApplet.PI;
+        float mag = b.getVel().mag();
+        return PVector.mult(b.vel,-0.5f*density*area*mag);
     }
 
 }

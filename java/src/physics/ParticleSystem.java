@@ -7,24 +7,24 @@ import processing.core.PApplet;
 import processing.core.PVector;
 import tools.SubPlot;;
 
-public class ParticleSystem extends Mover {
+public class ParticleSystem extends Body {
     private List<Particle> particles;
-    private int particleColor;
-    private float lifetime;
-    private PVector particleSpeed;
+    private PSControl psc;
 
-    public ParticleSystem(PVector pos, PVector vel, float mass, float radius, int particleColor, float lifetime, PVector particleSpeed) {
-        super(pos, vel, mass, radius);
-        this.particleColor = particleColor;
-        this.lifetime = lifetime;
-        this.particleSpeed = particleSpeed;
+    public ParticleSystem(PVector pos, PVector vel, float mass, float radius, PSControl psc) {
+        super(pos, vel, mass, radius, 0);
+        this.psc = psc;
         this.particles = new ArrayList<Particle>();
+    }
+
+    public PSControl getPSControl() {
+        return psc;
     }
 
     @Override
     public void move(float dt) {
         super.move(dt);
-        addParticle();
+        addParticles(dt);
         for (int i = particles.size() - 1; i >= 0; i--) {
             Particle p = particles.get(i);
             p.move(dt);
@@ -34,13 +34,21 @@ public class ParticleSystem extends Mover {
         }
     }
 
-    private void addParticle() {
-        float vx = (float)(particleSpeed.x*(Math.random() - 0.5));
-        float vy = (float)(particleSpeed.y*(Math.random() - 0.5));
-        Particle particle = new Particle(pos, new PVector(vx, vy), radius, particleColor, lifetime);
+    private void addParticles(float dt) {
+        float particlesPerFrame = psc.getFlow() * dt;
+        int n = (int) particlesPerFrame;
+        float f = particlesPerFrame - n;
+        for (int i = 0; i < n; i++) addOneParticle();
+        if (Math.random() < f) addOneParticle();
+    }
+
+    private void addOneParticle() {
+        Particle particle = new Particle(pos, psc.getRndVel(), psc.getRndRadius(), psc.getColor(), psc.getRndLifetime());
         particles.add(particle);
     }
 
+
+    @Override
     public void display(PApplet p, SubPlot plt) {
         for (Particle particle: particles) {
             particle.display(p, plt);

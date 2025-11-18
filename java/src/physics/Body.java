@@ -2,21 +2,30 @@ package physics;
 
 import processing.core.PApplet;
 import processing.core.PVector;
+import tools.SubPlot;
 
-public class Body extends Mover{
-    public int color;
-    private PApplet p;
+public class Body extends Mover {
+    protected int color;
+    protected float radius;
 
-    public Body(PApplet p, PVector pos, PVector vel, float mass, float radius,int color) {
-        super(pos, vel, mass, radius);
+    public Body(PVector pos, PVector vel, float mass, float radius, int color) {
+        super(pos, vel, mass);
         this.color = color;
-        this.p = p;
+        this.radius = radius;
     }
+
     
-    public void display(PApplet parent, SubPlot plt){
+    public void display(PApplet p, SubPlot plt) {
         p.pushStyle();
+        float[] pp = plt.getPixelCoord(pos.x, pos.y);
+        float[] r = plt.getDimInPixel(radius, radius);
+        p.noStroke();
         p.fill(color);
-        p.ellipse(pos.x, pos.y, 2*radius, 2*radius);
+        p.circle(pp[0], pp[1], r[0]);
         p.popStyle();
     }
-}
+
+    public float getRadius() {
+        return radius;
+    }
+}   

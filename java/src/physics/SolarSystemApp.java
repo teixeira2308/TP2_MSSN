@@ -16,15 +16,15 @@ public class SolarSystemApp implements IProcessing {
     private double[] window = {-1.2 * distEarthSun, 1.2 * distEarthSun, -1.2 * distEarthSun, 1.2 * distEarthSun};
 
     private SubPlot plt;
-    private CelestialBody sun, earth;
+    private Body sun, earth;
 
     private float speedUp = 60 * 60 * 24 * 30;
     
     @Override
     public void setup(PApplet p) {
         plt = new SubPlot(window, viewport, p.width, p.height);
-        sun = new CelestialBody(new PVector(), new PVector(), sunMass, distEarthSun / 10, p.color(255, 128, 0));
-        earth = new CelestialBody(new PVector(0, distEarthSun), new PVector(earthSpeed, 0), earthMass, distEarthSun/20, p.color(0, 180, 120));
+        sun = new Body(new PVector(), new PVector(), sunMass, distEarthSun / 10, p.color(255, 128, 0));
+        earth = new Body(new PVector(0, distEarthSun), new PVector(earthSpeed, 0), earthMass, distEarthSun/20, p.color(0, 180, 120));
     }
 
     @Override

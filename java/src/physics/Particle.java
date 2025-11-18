@@ -4,14 +4,12 @@ import processing.core.PApplet;
 import processing.core.PVector;
 import tools.SubPlot;
 
-public class Particle extends Mover {
+public class Particle extends Body {
     private float lifespan;
-    private int color;
     private float timer;
 
     public Particle(PVector pos, PVector vel, float radius, int color, float lifespan) {
-        super(pos, vel, 0f, radius);
-        this.color = color;
+        super(pos, vel, 0f, radius, color);
         this.lifespan = lifespan;
         timer = 0;
     }
@@ -26,6 +24,8 @@ public class Particle extends Mover {
         return timer > lifespan;
     }
 
+
+    @Override
     public void display(PApplet p, SubPlot plt) {
         p.pushStyle();
         float alpha = PApplet.map(timer, 0, lifespan, 255, 0);
