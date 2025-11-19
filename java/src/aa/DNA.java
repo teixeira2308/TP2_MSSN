@@ -15,9 +15,9 @@ public class DNA {
     public DNA() {
         maxSpeed = random(3, 5);
         maxForce = random(4, 7);
-        visionDistance = random(2,4);
+        visionDistance = random(2,2);
         visionSafeDistance = 0.25f * visionDistance;
-        visionAngle = (float) Math.PI;
+        visionAngle = (float) Math.PI * 0.8f;
         deltaTPursuit = random(0.5f, 1f);
         radiusArrive = random(3, 5);
         deltaTWander = random(1f, 1f);

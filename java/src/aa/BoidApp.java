@@ -38,7 +38,7 @@ public class BoidApp implements IProcessing{
     public void draw(PApplet p, float dt) {
         p.background(255);
 
-        b.applyBehaviours(index, dt);
+        b.applyBehaviour(index, dt);
 
         b.display(p, plt);
     }

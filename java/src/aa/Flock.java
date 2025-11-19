@@ -13,8 +13,8 @@ public class Flock {
     
     public Flock(int nboids, float mass, float radius, int color, float[] sacWeights, PApplet p, SubPlot plt) {
         boids = new ArrayList<Boid>();
+        double[] w = plt.getWindow();
         for(int i=0; i<nboids; i++) {
-            double[] w = plt.getWindow();
             float x = p.random((float) w[0], (float)w[1]);
             float y = p.random((float) w[2], (float)w[3]);
             Boid b = new Boid(new PVector(x,y), mass, radius, color, p, plt);
@@ -39,14 +39,14 @@ public class Flock {
         return bodies;
     }
 
-    public void applyBehaviours(float dt) {
+    public void applyBehaviour(float dt) {
         for (Boid b : boids) {
             b.applyBehaviours(dt);
         }
     }
 
     public Boid getBoid(int n) {
-        return boids.get(i);
+        return boids.get(n);
     }
 
     public void display(PApplet p, SubPlot plt) {

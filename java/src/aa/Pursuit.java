@@ -3,8 +3,8 @@ package aa;
 import physics.Body;
 import processing.core.PVector;
 
-public class Persuit extends Behaviour {
-    public Persuit(float weight) {
+public class Pursuit extends Behaviour {
+    public Pursuit(float weight) {
         super(weight);
     }
 

@@ -1,6 +1,7 @@
 package aa;
 
 import physics.Body;
+import processing.core.PVector;
 
 public class Evade extends Behaviour {
     public Evade(float weight) {

@@ -5,7 +5,9 @@ import java.util.List;
 
 import javax.imageio.plugins.tiff.FaxTIFFTagSet;
 import physics.Body;
+import processing.core.PApplet;
 import processing.core.PVector;
+import tools.SubPlot;
 
 public class Eye {
     private List<Body> allTrackingBodies;
@@ -35,6 +37,29 @@ public class Eye {
             if (farSight(b.getPos())) farSight.add(b);
             if (nearSight(b.getPos())) nearSight.add(b);
         }
+    }
+
+    public void display(PApplet p, SubPlot plt) {
+        p.pushStyle();
+        p.pushMatrix();
+        float[] pp = plt.getPixelCoord(me.getPos().x, me.getPos().y);
+        p.translate(pp[0], pp[1]);
+        p.rotate(-me.getVel().heading());
+        p.noFill();
+        p.stroke(255, 0, 0);
+        p.strokeWeight(3);
+        float[] dd1 = plt.getDimInPixel(me.dna.visionDistance, me.dna.visionDistance);
+        float[] dd2 = plt.getDimInPixel(me.dna.visionSafeDistance, me.dna.visionSafeDistance);
+        p.rotate(me.dna.visionAngle);
+        p.line(0, 0, dd1[0], 0);
+        p.rotate(-2 * me.dna.visionAngle);
+        p.line(0, 0, dd1[0], 0);
+        p.rotate(me.dna.visionAngle);
+        p.arc(0, 0, 2*dd1[0], 2*dd1[0], -me.dna.visionAngle, me.dna.visionAngle);
+        p.stroke(255, 0, 255);
+        p.circle(0, 0, 2*dd2[0]);
+        p.popMatrix();
+        p.popStyle();
     }
 
     private boolean inSight(PVector t, float maxDistance, float maxAngle) {

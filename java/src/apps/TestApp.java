@@ -39,8 +39,8 @@ public class TestApp implements IProcessing{
 
     @Override
     public void mousePressed(PApplet parent) {
-        double[] zz = plt.getWorldCoord(parent.mouseX, parent.mouseY);
-        PApplet.println(xy[0], "   ", xy[1]);
+        double[] zz = plt1.getWorldCoord(parent.mouseX, parent.mouseY);
+        PApplet.println(zz[0], "   ", zz[1]);
     }
 
     

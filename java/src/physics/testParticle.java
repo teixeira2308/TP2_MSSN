@@ -20,7 +20,7 @@ public class testParticle implements IProcessing{
         float radius = 1;
         int color = parent.color(255, 0, 0);
         float lifespan = 10;
-        particle = new Particle(parent, pos, vel, radius, color, lifespan);
+        particle = new Particle(pos, vel, radius, color, lifespan);
         particle.display(parent, plt);
     }
 
