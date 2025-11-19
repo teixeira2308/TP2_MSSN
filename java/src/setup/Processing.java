@@ -6,6 +6,7 @@
 package setup;
 
 import aa.BoidApp;
+import aa.FlockTestApp;
 import apps.TestApp;
 import physics.ControlGUIApp;
 import physics.FallingBodyApp;
@@ -25,7 +26,7 @@ public class Processing extends PApplet {
     private int lastUpdateTime;
 
     public static void main(String[] args) {
-        app = new BoidApp();
+        app = new FlockTestApp();
         PApplet.main(Processing.class.getName());
     }
 

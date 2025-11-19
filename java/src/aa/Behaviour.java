@@ -10,11 +10,6 @@ public abstract class Behaviour implements IBehaviour {
     }
 
     @Override
-    public PVector getDesiredVelocity(Boid me) {
-        return null;
-    }
-
-    @Override
     public void setWeight(float weight) {
         this.weight = weight;
     }

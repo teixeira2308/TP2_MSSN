@@ -16,26 +16,29 @@ public class BoidApp implements IProcessing{
     private SubPlot plt;
     private Body target;
     private List<Body> allTrackingBodies;
+    private int index = 2;
 
     @Override
     public void setup(PApplet p) {
         plt = new SubPlot(window, viewport, p.width, p.height);
-        b = new Boid(new PVector(), new PVector(), 1, 0.5f, p.color(0), p, plt);
+        b = new Boid(new PVector(), 1, 0.5f, p.color(0), p, plt);
+        b.addBehaviour(new Seek(1f));
+        b.addBehaviour(new Flee(1f));
+        b.addBehaviour(new Wander(1f));
+
         target = new Body(new PVector(), new PVector(), 1f, 0.2f, p.color(255, 0, 0));
         allTrackingBodies = new ArrayList<Body>();
         allTrackingBodies.add(target);
         Eye eye = new Eye(b, allTrackingBodies);
         b.setEye(eye);
 
-        Seek seek = new Seek(1);
-        b.addBehaviour(seek);
     }
 
     @Override
     public void draw(PApplet p, float dt) {
         p.background(255);
 
-        b.applyBehaviours(dt);
+        b.applyBehaviours(index, dt);
 
         b.display(p, plt);
     }

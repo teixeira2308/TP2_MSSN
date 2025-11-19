@@ -16,12 +16,16 @@ public class Boid extends Body {
     protected DNA dna;
     protected Eye eye;
     private List<Behaviour> behaviours;
+    protected float phiWander;
+    private double[] window;
+    private float sumWeights;
 
-    protected Boid(PVector pos, PVector vel, float mass, float radius, int color, PApplet p, SubPlot plt) {
+    protected Boid(PVector pos, float mass, float radius, int color, PApplet p, SubPlot plt) {
         super(pos, new PVector(), mass, radius, color);
         dna = new DNA();
         behaviours = new ArrayList<Behaviour>();
         this.plt = plt;
+        window = plt.getWindow();
         setShape(p, plt);
     }
 
@@ -42,12 +46,28 @@ public class Boid extends Body {
         shape.endShape(PConstants.CLOSE);
     }
 
+    private void updateSumWeights() {
+        float sumWeights = 0;
+        for (Behaviour behaviour : behaviours) {
+            sumWeights += behaviour.getWeight();
+        }
+    }
+
     public void addBehaviour(Behaviour behaviour) {
         behaviours.add(behaviour);
+        updateSumWeights();
     }
 
     public void removeBehaviour(Behaviour behaviour) {
         if(behaviours.contains(behaviour)) behaviours.remove(behaviour);
+        updateSumWeights();
+    }
+
+    public void applyBehaviours(int i, float dt) {
+        eye.look();
+        Behaviour behaviour = behaviours.get(i);
+        PVector vd = behaviour.getDesiredVelocity(this);
+        move(dt, vd);
     }
 
     public void applyBehaviours(float dt) {
@@ -56,7 +76,7 @@ public class Boid extends Body {
         PVector vd = new PVector();
         for (Behaviour behaviour : behaviours) {
             PVector vdd = behaviour.getDesiredVelocity(this);
-            vdd.mult(behaviour.getWeight());
+            vdd.mult(behaviour.getWeight()/sumWeights);
             vd.add(vdd);
         }
         move(dt, vd);
@@ -67,13 +87,19 @@ public class Boid extends Body {
         PVector fs = PVector.sub(vd, vel);
         applyForce(fs.limit(dna.maxForce));
         super.move(dt);
+        if (pos.x < window[0]) pos.x += window[1] - window[0];
+        if (pos.y < window[2]) pos.y += window[3] - window[2];
+        if (pos.x >= window[1])pos.x -= window[1] - window[0];
+        if (pos.y >= window[3]) pos.y -= window[3] - window[2];
     }
 
     @Override
     public void display(PApplet p, SubPlot plt) {
+        p.pushMatrix();
         float[] pp = plt.getPixelCoord(pos.x, pos.y);
         p.translate(pp[0], pp[1]);
         p.rotate(-vel.heading());
         p.shape(shape);
+        p.popMatrix();
     }
 }
