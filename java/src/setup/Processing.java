@@ -27,7 +27,7 @@ public class Processing extends PApplet {
     private int lastUpdateTime;
 
     public static void main(String[] args) {
-        app = new ReynoldsTestApp();
+        app = new SolarSystemApp();
         PApplet.main(Processing.class.getName());
     }
 
