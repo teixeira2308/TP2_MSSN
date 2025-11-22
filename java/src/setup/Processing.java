@@ -5,9 +5,7 @@
 
 package setup;
 
-import aa.BoidApp;
-import aa.FlockTestApp;
-import aa.ReynoldsTestApp;
+import aa.*;
 import apps.TestApp;
 import physics.ControlGUIApp;
 import physics.FallingBodyApp;
@@ -27,7 +25,7 @@ public class Processing extends PApplet {
     private int lastUpdateTime;
 
     public static void main(String[] args) {
-        app = new SolarSystemApp();
+        app = new ReynoldsTestApp();
         PApplet.main(Processing.class.getName());
     }
 

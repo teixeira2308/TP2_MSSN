@@ -5,6 +5,8 @@ import processing.core.PVector;
 import setup.IProcessing;
 import tools.SubPlot;
 
+import java.util.ArrayList;
+
 public class SolarSystemApp implements IProcessing {
 
     private float sunMass = 1.989e30f;
@@ -33,8 +35,13 @@ public class SolarSystemApp implements IProcessing {
     private float distNeptuneSun = 4.50e12f;
     private float neptuneSpeed = 5400;
 
-    private float[] viewport = {0.0f,0.0f,1.0f,0.9f};
-    private double[] window = {-distNeptuneSun, distNeptuneSun, -distNeptuneSun, distNeptuneSun};
+    private ArrayList<PVector> stars;
+    private int numStars;
+
+    private ArrayList<Comet> comets;
+    private int maxComets = 3;
+    private float cometSpawnTimer = 0;private float[] viewport = {0.0f,0.0f,1.0f,0.9f};
+    private float cometSpawnInterval = 5.0f;private double[] window = {-distNeptuneSun, distNeptuneSun, -distNeptuneSun, distNeptuneSun};
 
     private float[] planetOrbits = {distMercurySun, distVenusSun, distEarthSun, distMarsSun, distJupiterSun, distSaturnSun, distUranusSun, distNeptuneSun};
 
@@ -126,6 +133,80 @@ public class SolarSystemApp implements IProcessing {
         } else if (p.key == '0') {
             resetZoom(p);
         }
+    }
+
+    private void initializeComets(PApplet p) {
+        comets = new ArrayList<Comet>();
+        spawnComet(p);
+    }
+
+    private void spawnComet(PApplet p) {
+        float side = p.random(4);
+        PVector spawnPos = new PVector();
+        PVector spawnVel = new PVector();
+
+        switch((int)side) {
+            case 0:
+                spawnPos.set(p.random((float)window[0], (float)window[1], (float)window[3] * 1.1f));
+                spawnVel.set(p.random(-10, 10), p.random(-50, -20));
+                break;
+            case 1:
+                spawnPos.set((float)window[1] * 1.1f, p.random((float)window[2], (float)window[3]));
+                spawnVel.set(p.random(-50, -20), p.random(-10, 10));
+                break;
+
+            case 2:
+                spawnPos.set(p.random((float)window[0], (float)window[1], (float)window[2] * 1.1f));
+                spawnVel.set(p.random(-10, 10), p.random(20, 50));
+                break;
+            case 3:
+                spawnPos.set((float)window[0] * 1.1f, p.random((float)window[2], (float)window[3]));
+                spawnVel.set(p.random(20, 50), p.random(-10, 10));
+                break;
+        }
+        comets.add(new Comet(p, spawnPos, spawnVel, p.random(3, 8)));
+    }
+
+    private void updateComets(PApplet p, float dt) {
+        cometSpawnTimer += dt;
+
+        if (comets.size() < maxComets && cometSpawnTimer >= cometSpawnInterval) {
+            spawnComet(p);
+            cometSpawnTimer = 0;
+            cometSpawnInterval = p.random(3, 8);
+        }
+
+        for (int i = comets.size() - 1; i >= 0; i--) {
+            Comet comet = comets.get(i);
+            comet.update(sun);
+            if (comet.isDead(window)) {
+                comets.remove(i);
+            }
+        }
+    }
+
+    private void initializeStars(PApplet p) {
+        stars = new ArrayList<PVector>();
+        for (int i = 0; i < numStars; i++) {
+            float x = p.random(-distNeptuneSun * 2, distNeptuneSun * 2);
+            float y =  p.random(-distSaturnSun * 2, distSaturnSun * 2);
+            float size = p.random(1, 3);
+            float brightness = p.random(150, 255);
+            stars.add(new PVector(x, y, size));
+        }
+    }
+
+    private void drawStars(PApplet p, SubPlot plt) {
+        p.pushStyle();
+        p.noStroke();
+        for (PVector star : stars) {
+            float[] pixelCoord = plt.getPixelCoord(star.x, star.y);
+            if (pixelCoord[0] >= 0 && pixelCoord[0] <= p.width && pixelCoord[1] >= 0 && pixelCoord[1] <= p.height) {
+                p.fill(255, 255, 255, p.random(200, 255));
+                p.circle(pixelCoord[0], pixelCoord[1], star.z);
+            }
+        }
+        p.popStyle();
     }
 
     private void zoomIn(PApplet p) {
