@@ -12,50 +12,72 @@ import static java.awt.SystemColor.window;
 public class Comet {
     private PVector position;
     private PVector velocity;
-    private PVector tail;
+    private ParticleSystem tailParticles;
     private float size;
     private int lifespan;
     private int maxLifespan;
+    private Body sun;
 
     public Comet(PApplet p, PVector pos, PVector vel, float cometSize, Body sun) {
         position = pos.copy();
         velocity = vel.copy();
         size = cometSize;
         maxLifespan = 500;
+        this.sun = sun;
         lifespan = maxLifespan;
-        tail = new PVector();
+
+        initializeParticleSystem(p);
+        System.out.println("Comet created at: " + position + " with velocity: " + velocity);
     }
 
-    public void update(Body sun) {
-        PVector toSun = PVector.sub(sun.getPos(), position);
-        float distance = toSun.mag();
-        if (distance > 0) {
-            PVector gravity = toSun.normalize().mult((float)(sun.getMass() * 0.0001f / (distance * distance)));
-            velocity.add(gravity);
+    private void initializeParticleSystem(PApplet p) {
+        float[] velControl = {
+                PApplet.PI,
+                PApplet.PI,
+                20f,
+                60f,
+        };
+        float[] lifetime = {0.8f, 2.0f};
+        float[] radius = {2f, 4f};
+        float flow = 150f;
+        int color = p.color(180, 220, 255);
+
+        PSControl psc = new PSControl(velControl, lifetime, radius, flow, color);
+        tailParticles = new ParticleSystem(position, velocity, 1f, 1f, psc);
+    }
+
+    public void update(float dt) {
+        float speedUp = 60 * 60 * 24 * 30;
+        position.add(PVector.mult(velocity, dt * speedUp));
+
+        if (tailParticles != null) {
+            tailParticles.setPos(position);
+            tailParticles.setVel(velocity);
+            tailParticles.move(dt);
         }
-        position.add(velocity);
-        tail = PVector.mult(velocity, -0.3f);
         lifespan--;
     }
 
     public void display(PApplet p, SubPlot plt) {
+        tailParticles.display(p, plt);
         p.pushStyle();
         float[] headPixel = plt.getPixelCoord(position.x, position.y);
-        float[] tailPixel = plt.getPixelCoord(position.x + tail.x, position.y + tail.y);
 
-        p.strokeWeight(3);
-        for (int i = 0; i < 5; i++) {
-            float alpha = 100 - i * 20;
-            p.stroke(200, 230, 255, alpha);
-            float tailX = PApplet.lerp(headPixel[0], tailPixel[0], i * 0.2f);
-            float tailY = PApplet.lerp(headPixel[1], tailPixel[1], i * 0.2f);
-            p.line(headPixel[0], headPixel[1], tailX, tailY);
-        }
+        p.fill(255, 0, 0);
+        p.circle(headPixel[0], headPixel[1], 5);
+
         p.noStroke();
-        p.fill(200, 230, 255);
-        p.circle(headPixel[0], headPixel[1], size);
+        p.fill(255, 255, 255);
+        p.circle(headPixel[0], headPixel[1], 8);
+
+        p.fill(180, 220, 255, 100);
+        p.circle(headPixel[0], headPixel[1], 12);
 
         p.popStyle();
+
+        if (lifespan % 200 == 0) {
+            System.out.println("Comet displayed at screen: " + headPixel[0] + ", " + headPixel[1]);
+        }
     }
 
     public boolean isDead(double[] window) {

@@ -32,10 +32,12 @@ public class Particle extends Body {
         p.fill(color, alpha);
 
         float[] pp = plt.getPixelCoord(pos.x, pos.y);
-        float[] r = plt.getVectorCoord(radius, radius);
+        //float[] r = plt.getVectorCoord(radius, radius);
+
+        float displaySize = Math.max(radius * 2, 4);
 
         p.noStroke();
-        p.circle(pp[0], pp[1], 2 * r[0]);
+        p.circle(pp[0], pp[1], displaySize);
 
         p.popStyle();
     }

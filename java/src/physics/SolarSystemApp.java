@@ -79,6 +79,16 @@ public class SolarSystemApp implements IProcessing {
     public void draw(PApplet p, float dt) {
         p.background(0);
 
+        // Debug information - more detailed
+        p.fill(255);
+        p.text("Comets: " + (comets != null ? comets.size() : "null"), 10, 100);
+        p.text("Spawn timer: " + cometSpawnTimer + " / " + cometSpawnInterval, 10, 120);
+        p.text("Window: [" + (float)window[0] + ", " + (float)window[1] + "]", 10, 140);
+        p.text("Press 'C' to manually spawn comet", 10, 160);
+
+        p.text("FPS: " + p.frameRate, 10, 180);
+        p.text("dt: " + dt, 10, 200);
+
         drawStars(p, plt);
 
         updateComets(p, dt);
@@ -141,53 +151,60 @@ public class SolarSystemApp implements IProcessing {
             zoomOut(p);
         } else if (p.key == '0') {
             resetZoom(p);
+        } else if (p.key == 'c' || p.key == 'C') {
+            spawnComet(p, window);
+
         }
     }
 
     private void initializeComets(PApplet p) {
         comets = new ArrayList<Comet>();
-        spawnComet(p);
+        spawnComet(p, window);
     }
 
-    private void spawnComet(PApplet p) {
-        float side = p.random(4);
-        PVector spawnPos = new PVector();
-        PVector spawnVel = new PVector();
+    private void spawnComet(PApplet p, double[] window) {
 
-        switch((int)side) {
-            case 0:
-                spawnPos.set(p.random((float)window[0], (float)window[1]), (float)window[3] * 1.1f);
-                spawnVel.set(p.random(-10, 10), p.random(-50, -20));
-                break;
-            case 1:
-                spawnPos.set((float)window[1] * 1.1f, p.random((float)window[2], (float)window[3]));
-                spawnVel.set(p.random(-50, -20), p.random(-10, 10));
-                break;
+        float angle = p.random(PApplet.TWO_PI);
 
-            case 2:
-                spawnPos.set(p.random((float)window[0], (float)window[1]), (float)window[2] * 1.1f);
-                spawnVel.set(p.random(-10, 10), p.random(20, 50));
-                break;
-            case 3:
-                spawnPos.set((float)window[0] * 1.1f, p.random((float)window[2], (float)window[3]));
-                spawnVel.set(p.random(20, 50), p.random(-10, 10));
-                break;
+        float r = p.random((float) (window[1] * 0.6f), (float) (window[1] * 0.9f));
+
+        PVector spawnPos = new PVector(
+                r * PApplet.cos(angle),
+                r * PApplet.sin(angle)
+        );
+
+
+        PVector tangent = new PVector(-spawnPos.y, spawnPos.x).normalize();
+
+        if (p.random(1) > 0.5f) {
+            tangent.mult(-1);
         }
-        comets.add(new Comet(p, spawnPos, spawnVel, p.random(3, 8), sun));
+
+        float cometSpeed = p.random(1e4f, 3e4f);
+
+        PVector spawnVel = tangent.mult(cometSpeed);
+
+        Comet newComet = new Comet(p, spawnPos, spawnVel, 8f, sun);
+        comets.add(newComet);
+
     }
 
     private void updateComets(PApplet p, float dt) {
         cometSpawnTimer += dt;
 
+        if ((int)(cometSpawnTimer * 10) % 10 == 0) { // Print every ~1 second
+            System.out.println("Comet spawn timer: " + cometSpawnTimer + " / " + cometSpawnInterval);
+        }
+
         if (comets.size() < maxComets && cometSpawnTimer >= cometSpawnInterval) {
-            spawnComet(p);
+            spawnComet(p, window);
             cometSpawnTimer = 0;
             cometSpawnInterval = p.random(3, 8);
         }
 
         for (int i = comets.size() - 1; i >= 0; i--) {
             Comet comet = comets.get(i);
-            comet.update(sun);
+            comet.update(dt);
             if (comet.isDead(window)) {
                 comets.remove(i);
             }

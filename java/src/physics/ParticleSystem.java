@@ -13,9 +13,15 @@ public class ParticleSystem extends Body {
     private PSControl psc;
 
     public ParticleSystem(PVector pos, PVector vel, float mass, float radius, PSControl psc) {
-        super(pos, vel, mass, radius, 0);
+        super(pos, vel, mass, radius, psc.getColor());
         this.psc = psc;
         this.particles = new ArrayList<Particle>();
+
+        System.out.println("ParticleSystem created:");
+        System.out.println("  Position: " + pos);
+        System.out.println("  Velocity: " + vel);
+        System.out.println("  Flow: " + psc.getFlow());
+        System.out.println("  Color: " + psc.getColor());
     }
 
     public PSControl getPSControl() {
