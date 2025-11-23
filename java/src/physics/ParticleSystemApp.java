@@ -1,13 +1,12 @@
-package setup;
+package physics;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import physics.PSControl;
 
-import physics.Particle;
-import physics.ParticleSystem;
 import processing.core.PApplet;
 import processing.core.PVector;
+import setup.IProcessing;
 import tools.SubPlot;
 
 public class ParticleSystemApp implements IProcessing {
@@ -30,6 +29,10 @@ public class ParticleSystemApp implements IProcessing {
     public void draw(PApplet p, float dt) {
         p.background(255);
 
+        for (ParticleSystem ps : pss) {
+            ps.removeDeadParticles();
+        }
+
         for(ParticleSystem ps : pss) {
             ps.applyForce(new PVector(0, 0));
         }
@@ -39,10 +42,25 @@ public class ParticleSystemApp implements IProcessing {
             ps.display(p, plt);
         }
 
+        removeDeadParticleSystems();
+        for(ParticleSystem ps : pss) {
+            ps.removeDeadParticles();
+        }
+
         velParams[0] = PApplet.map(p.mouseX, 0, p.width, PApplet.radians(0), PApplet.radians(360));
         for (ParticleSystem ps : pss) {
             PSControl psc = ps.getPSControl();
             psc.setVelParams(velParams);
+        }
+    }
+
+    private void removeDeadParticleSystems() {
+        Iterator<ParticleSystem> it = pss.iterator();
+        while (it.hasNext()) {
+            ParticleSystem ps = it.next();
+            if (ps.isEmpty()) {
+                it.remove();
+            }
         }
     }
 

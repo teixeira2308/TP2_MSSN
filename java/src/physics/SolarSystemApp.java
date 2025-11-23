@@ -36,12 +36,14 @@ public class SolarSystemApp implements IProcessing {
     private float neptuneSpeed = 5400;
 
     private ArrayList<PVector> stars;
-    private int numStars;
+    private int numStars = 2500;
 
     private ArrayList<Comet> comets;
     private int maxComets = 3;
-    private float cometSpawnTimer = 0;private float[] viewport = {0.0f,0.0f,1.0f,0.9f};
-    private float cometSpawnInterval = 5.0f;private double[] window = {-distNeptuneSun, distNeptuneSun, -distNeptuneSun, distNeptuneSun};
+    private float cometSpawnTimer = 0;
+    private float[] viewport = {0.0f,0.0f,1.0f,0.9f};
+    private float cometSpawnInterval = 5.0f;
+    private double[] window = {-distNeptuneSun, distNeptuneSun, -distNeptuneSun, distNeptuneSun};
 
     private float[] planetOrbits = {distMercurySun, distVenusSun, distEarthSun, distMarsSun, distJupiterSun, distSaturnSun, distUranusSun, distNeptuneSun};
 
@@ -69,11 +71,18 @@ public class SolarSystemApp implements IProcessing {
         saturn = new Body(new PVector(0, distSaturnSun), new PVector(saturnSpeed, 0), saturnMass, distSaturnSun/20, p.color(176, 143, 54));
         uranus = new Body(new PVector(0, distUranusSun), new PVector(uranusSpeed, 0), uranusMass, distUranusSun/20, p.color(85, 128, 170));
         neptune = new Body(new PVector(0, distNeptuneSun), new PVector(neptuneSpeed, 0), neptuneMass, distNeptuneSun/20, p.color(54, 104, 150));
+        initializeStars(p);
+        initializeComets(p);
     }
 
     @Override
     public void draw(PApplet p, float dt) {
         p.background(0);
+
+        drawStars(p, plt);
+
+        updateComets(p, dt);
+        drawComets(p, plt);
 
         p.fill(255);
         p.text("Visualização do planeta: " + planetNames[currentPlanetIndex] + " Órbita", 10, 20);
@@ -147,7 +156,7 @@ public class SolarSystemApp implements IProcessing {
 
         switch((int)side) {
             case 0:
-                spawnPos.set(p.random((float)window[0], (float)window[1], (float)window[3] * 1.1f));
+                spawnPos.set(p.random((float)window[0], (float)window[1]), (float)window[3] * 1.1f);
                 spawnVel.set(p.random(-10, 10), p.random(-50, -20));
                 break;
             case 1:
@@ -156,7 +165,7 @@ public class SolarSystemApp implements IProcessing {
                 break;
 
             case 2:
-                spawnPos.set(p.random((float)window[0], (float)window[1], (float)window[2] * 1.1f));
+                spawnPos.set(p.random((float)window[0], (float)window[1]), (float)window[2] * 1.1f);
                 spawnVel.set(p.random(-10, 10), p.random(20, 50));
                 break;
             case 3:
@@ -164,7 +173,7 @@ public class SolarSystemApp implements IProcessing {
                 spawnVel.set(p.random(20, 50), p.random(-10, 10));
                 break;
         }
-        comets.add(new Comet(p, spawnPos, spawnVel, p.random(3, 8)));
+        comets.add(new Comet(p, spawnPos, spawnVel, p.random(3, 8), sun));
     }
 
     private void updateComets(PApplet p, float dt) {
@@ -185,13 +194,18 @@ public class SolarSystemApp implements IProcessing {
         }
     }
 
+    private void drawComets(PApplet p, SubPlot plt) {
+        for (Comet comet : comets) {
+            comet.display(p, plt);
+        }
+    }
+
     private void initializeStars(PApplet p) {
         stars = new ArrayList<PVector>();
         for (int i = 0; i < numStars; i++) {
             float x = p.random(-distNeptuneSun * 2, distNeptuneSun * 2);
-            float y =  p.random(-distSaturnSun * 2, distSaturnSun * 2);
+            float y =  p.random(-distNeptuneSun * 2, distNeptuneSun * 2);
             float size = p.random(1, 3);
-            float brightness = p.random(150, 255);
             stars.add(new PVector(x, y, size));
         }
     }

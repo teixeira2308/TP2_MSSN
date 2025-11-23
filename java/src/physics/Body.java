@@ -28,4 +28,8 @@ public class Body extends Mover {
     public float getRadius() {
         return radius;
     }
+
+    public float getMass() {
+        return mass;
+    }
 }   

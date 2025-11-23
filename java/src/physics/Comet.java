@@ -10,18 +10,18 @@ import static java.awt.SystemColor.window;
 
 
 public class Comet {
-    PVector position;
-    PVector velocity;
-    PVector tail;
-    float size;
-    int lifespan;
-    int maxLifespan;
+    private PVector position;
+    private PVector velocity;
+    private PVector tail;
+    private float size;
+    private int lifespan;
+    private int maxLifespan;
 
-    public Comet(PApplet p, PVector pos, PVector vel, float cometSize) {
+    public Comet(PApplet p, PVector pos, PVector vel, float cometSize, Body sun) {
         position = pos.copy();
         velocity = vel.copy();
         size = cometSize;
-        maxLifespan = (int)(p.random(300, 600));
+        maxLifespan = 500;
         lifespan = maxLifespan;
         tail = new PVector();
     }
@@ -30,7 +30,7 @@ public class Comet {
         PVector toSun = PVector.sub(sun.getPos(), position);
         float distance = toSun.mag();
         if (distance > 0) {
-            PVector gravity = toSun.normalize().mult((float)(sun.mass * 0.0001f / (distance * distance)));
+            PVector gravity = toSun.normalize().mult((float)(sun.getMass() * 0.0001f / (distance * distance)));
             velocity.add(gravity);
         }
         position.add(velocity);
@@ -58,9 +58,14 @@ public class Comet {
         p.popStyle();
     }
 
-    boolean isDead(double[] window) {
+    public boolean isDead(double[] window) {
         return lifespan <= 0 ||
                 position.x < window[0] || position.x > window[1] ||
                 position.y < window[2] || position.y > window[3];
     }
+
+    public PVector getPosition() {
+        return position;
+    }
+
 }

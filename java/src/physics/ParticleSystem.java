@@ -1,6 +1,7 @@
 package physics;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import processing.core.PApplet;
@@ -42,9 +43,27 @@ public class ParticleSystem extends Body {
         if (Math.random() < f) addOneParticle();
     }
 
+    public void removeDeadParticles() {
+        Iterator<Particle> iterator = particles.iterator();
+        while (iterator.hasNext()) {
+            Particle p = iterator.next();
+            if (p.isDead()) {
+                iterator.remove();
+            }
+        }
+    }
+
+    public boolean isEmpty() {
+        return particles.isEmpty();
+    }
+
     private void addOneParticle() {
         Particle particle = new Particle(pos, psc.getRndVel(), psc.getRndRadius(), psc.getColor(), psc.getRndLifetime());
         particles.add(particle);
+    }
+
+    public int getParticleCount() {
+        return particles.size();
     }
 
 

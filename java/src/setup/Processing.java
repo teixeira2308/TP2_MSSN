@@ -7,12 +7,7 @@ package setup;
 
 import aa.*;
 import apps.TestApp;
-import physics.ControlGUIApp;
-import physics.FallingBodyApp;
-import physics.Particle;
-import physics.ParticleSystem;
-import physics.SolarSystemApp;
-import physics.testParticle;
+import physics.*;
 import processing.core.PApplet;
 
 /**
@@ -25,7 +20,7 @@ public class Processing extends PApplet {
     private int lastUpdateTime;
 
     public static void main(String[] args) {
-        app = new ReynoldsTestApp();
+        app = new ParticleSystemApp();
         PApplet.main(Processing.class.getName());
     }
 
