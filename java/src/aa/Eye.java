@@ -76,4 +76,8 @@ public class Eye {
     private boolean nearSight(PVector t) {
         return inSight(t, me.dna.visionSafeDistance, (float) Math.PI);
     }
+
+    public void setAllTrackingBodies(List<Body> allTrackingBodies) {
+        this.allTrackingBodies = allTrackingBodies;
+    }
 }

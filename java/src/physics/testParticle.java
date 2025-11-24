@@ -40,4 +40,9 @@ public class testParticle implements IProcessing{
     public void mousePressed(PApplet parent) {
 
     }
+
+    @Override
+    public void keyReleased(PApplet parent) {
+
+    }
 }

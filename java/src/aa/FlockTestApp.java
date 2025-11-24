@@ -33,6 +33,11 @@ public class FlockTestApp implements IProcessing {
     }
 
     @Override
+    public void keyReleased(PApplet parent) {
+
+    }
+
+    @Override
     public void keyPressed(PApplet p) {
 
     }

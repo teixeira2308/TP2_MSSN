@@ -87,6 +87,11 @@ public class ReynoldsTestApp implements IProcessing {
     }
 
     @Override
+    public void keyReleased(PApplet parent) {
+
+    }
+
+    @Override
     public void keyPressed(PApplet p) {
         if (p.key == 't') {
             ix = (ix + 1) % 2;

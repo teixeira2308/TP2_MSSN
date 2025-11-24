@@ -38,7 +38,7 @@ public class Comet {
                 60f,
         };
         float[] lifetime = {0.8f, 2.0f};
-        float[] radius = {2f, 4f};
+        float[] radius = {.001f, .05f};
         float flow = 150f;
         int color = p.color(180, 220, 255);
 

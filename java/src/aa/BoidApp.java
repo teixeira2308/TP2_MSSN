@@ -50,6 +50,11 @@ public class BoidApp implements IProcessing{
     }
 
     @Override
+    public void keyReleased(PApplet parent) {
+
+    }
+
+    @Override
     public void keyPressed(PApplet p) {
 
     }

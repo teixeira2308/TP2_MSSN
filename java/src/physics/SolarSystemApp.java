@@ -144,6 +144,11 @@ public class SolarSystemApp implements IProcessing {
     }
 
     @Override
+    public void keyReleased(PApplet parent) {
+
+    }
+
+    @Override
     public void keyPressed(PApplet p) {
         if (p.key == '+') {
             zoomIn(p);
@@ -184,7 +189,7 @@ public class SolarSystemApp implements IProcessing {
 
         PVector spawnVel = tangent.mult(cometSpeed);
 
-        Comet newComet = new Comet(p, spawnPos, spawnVel, 8f, sun);
+        Comet newComet = new Comet(p, spawnPos, spawnVel, .005f, sun);
         comets.add(newComet);
 
     }

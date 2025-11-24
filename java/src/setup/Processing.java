@@ -50,4 +50,9 @@ public class Processing extends PApplet {
     public void mousePressed() {
         app.mousePressed(this);
     }
+
+    @Override
+    public void keyReleased() {
+        app.keyReleased(this);
+    }
 }

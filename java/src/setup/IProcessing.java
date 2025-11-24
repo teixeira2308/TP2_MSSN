@@ -16,4 +16,7 @@ public interface IProcessing {
 
     public void mousePressed(PApplet parent);
 
+    public void keyReleased(PApplet parent);
+
+
 }

@@ -56,5 +56,10 @@ public class FallingBodyApp implements IProcessing {
     public void mousePressed(PApplet p) {
 
     }
-    
+
+    @Override
+    public void keyReleased(PApplet parent) {
+
+    }
+
 }

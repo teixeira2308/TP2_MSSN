@@ -32,4 +32,8 @@ public class Body extends Mover {
     public float getMass() {
         return mass;
     }
-}   
+
+    public int getBoidColor() {
+        return  color;
+    }
+}

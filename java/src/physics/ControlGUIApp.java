@@ -34,6 +34,11 @@ public class ControlGUIApp implements IProcessing {
     }
 
     @Override
+    public void keyReleased(PApplet parent) {
+
+    }
+
+    @Override
     public void keyPressed(PApplet p) {
         if (p.key == 'p') {
             ct = ControlType.POSITION;
